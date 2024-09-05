@@ -38,15 +38,18 @@ std::vector<DcpTree::DcpAction> DcpTree::AppendActionSequence(
   return seq;
 }
 
+// 产生行为
 ErrorType DcpTree::GenerateActionScript() {
   action_script_.clear();
   std::vector<DcpAction> ongoing_action_seq;
+  // 产生纵向行为
   for (int lon = 0; lon < static_cast<int>(DcpLonAction::MAX_COUNT); lon++) {
     ongoing_action_seq.clear();
     ongoing_action_seq.push_back(
         DcpAction(DcpLonAction(lon), ongoing_action_.lat, ongoing_action_.t));
 
     for (int h = 1; h < tree_height_; ++h) {
+      // 三种横向行为
       for (int lat = 0; lat < static_cast<int>(DcpLatAction::MAX_COUNT);
            lat++) {
         if (lat != static_cast<int>(ongoing_action_.lat)) {

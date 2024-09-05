@@ -110,6 +110,7 @@ ErrorType StateTransformer::GetFrenetStateFromState(const State& s,
   }
 
   decimal_t arc_length;
+  // 算s
   if (lane_.GetArcLengthByVecPosition(s.vec_position, &arc_length) !=
       kSuccess) {
     return kWrongStatus;

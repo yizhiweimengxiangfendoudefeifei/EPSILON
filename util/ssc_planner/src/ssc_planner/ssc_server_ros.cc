@@ -29,7 +29,7 @@ SscPlannerServer::SscPlannerServer(ros::NodeHandle nh, double work_rate,
 }
 
 void SscPlannerServer::PushSemanticMap(const SemanticMapManager& smm) {
-  if (p_input_smm_buff_) p_input_smm_buff_->try_enqueue(smm);
+  if (p_input_smm_buff_) p_input_smm_buff_->try_enqueue(smm);// 塞入数据
 }
 
 void SscPlannerServer::PublishData() {
@@ -182,7 +182,9 @@ void SscPlannerServer::PlanCycleCallback() {
   }
   // printf("input buffer size: %d.\n", p_input_smm_buff_->size_approx());
   // is_map_updated_ = false;  // return when no new map
-  while (p_input_smm_buff_->try_dequeue(last_smm_)) {
+  
+  while (p_input_smm_buff_->try_dequeue(last_smm_))
+  {
     is_map_updated_ = true;
   }
 

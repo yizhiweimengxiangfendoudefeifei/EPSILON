@@ -118,6 +118,7 @@ void EudmPlannerServer::PlanCycleCallback() {
 
   auto map_ptr =
       std::make_shared<semantic_map_manager::SemanticMapManager>(smm_);
+  printf("22222222222222\n");
 
   decimal_t replan_duration = 1.0 / work_rate_;
   double stamp =

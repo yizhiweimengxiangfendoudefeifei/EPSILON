@@ -52,9 +52,10 @@ ErrorType EudmPlanner::GetSimParam(const planning::eudm::ForwardSimDetail& cfg,
 ErrorType EudmPlanner::Init(const std::string config) {
   ReadConfig(config);
 
-  dcp_tree_ptr_ = new DcpTree(cfg_.sim().duration().tree_height(),
-                              cfg_.sim().duration().layer(),
-                              cfg_.sim().duration().last_layer());
+  // 行为树
+  dcp_tree_ptr_ = new DcpTree(cfg_.sim().duration().tree_height(),// 5
+                              cfg_.sim().duration().layer(),// 1
+                              cfg_.sim().duration().last_layer());// 1
   LOG(INFO) << "[Eudm]Init.";
   LOG(INFO) << "[Eudm]ActionScript size: "
             << dcp_tree_ptr_->action_script().size() << std::endl;
@@ -856,12 +857,12 @@ ErrorType EudmPlanner::RunOnce() {
     LOG(ERROR) << "[Eudm]map interface not initialized. Exit";
     return kWrongStatus;
   }
-
   if (map_itf_->GetEgoVehicle(&ego_vehicle_) != kSuccess) {
     LOG(ERROR) << "[Eudm]no ego vehicle found.";
     return kWrongStatus;
   }
   ego_id_ = ego_vehicle_.id();
+  printf("ego_id_: %d\n", ego_id_);
   time_stamp_ = ego_vehicle_.state().time_stamp;
 
   LOG(WARNING) << std::fixed << std::setprecision(4)
@@ -883,6 +884,14 @@ ErrorType EudmPlanner::RunOnce() {
                << ego_vehicle_.state().acceleration << ","
                << ego_vehicle_.state().curvature << ")"
                << " lane id:" << ego_lane_id_by_pos;
+  std::cout << "[Eudm][Input]Ego plan state (x,y,theta,v,a,k):("
+            << ego_vehicle_.state().vec_position[0] << ","
+            << ego_vehicle_.state().vec_position[1] << ","
+            << ego_vehicle_.state().angle << ","
+            << ego_vehicle_.state().velocity << ","
+            << ego_vehicle_.state().acceleration << ","
+            << ego_vehicle_.state().curvature << ")"
+            << " lane id:" << ego_lane_id_by_pos << std::endl;
   LOG(WARNING) << "[Eudm][Setup]Desired vel:" << desired_velocity_
                << " sim_time total:" << sim_time_total_
                << " lc info[f_l,f_r,us_ol,us_or,solid_l,solid_r]:"
@@ -942,6 +951,7 @@ ErrorType EudmPlanner::RunOnce() {
   }
   line_info << "] cost: " << std::fixed << std::setprecision(3) << winner_score_
             << " time cost: " << timer.toc() << " ms.";
+  std::cout << line_info.str() << std::endl;
   LOG(WARNING) << line_info.str();
 
   time_cost_ = timer_runonce.toc();

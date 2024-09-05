@@ -43,7 +43,7 @@ sudo apt-get install libgoogle-glog-dev libdw-dev libopenblas-dev gfortran
 ```
 
 ```
-pip install empy pygame
+pip install empy==3.3.4 pygame
 ```
 
 #### Install OOQP
@@ -51,7 +51,9 @@ We use [OOQP](http://pages.cs.wisc.edu/~swright/ooqp/) for solving quadratic pro
 
 
 #### Install Protobuf
-We use [Protocol Buffers](https://developers.google.com/protocol-buffers/) for parameter configuration. For the installation guide, please refer to this [link](https://github.com/protocolbuffers/protobuf/blob/master/src/README.md).
+We use [Protocol Buffers](https://developers.google.com/protocol-buffers/) for parameter configuration. For the installation guide, please refer to this [link](https://github.com/protocolbuffers/protobuf/blob/master/src/README.md).  
+https://blog.csdn.net/deyili/article/details/122912301  
+protobuf --version
 
 
 ## Build on ROS

@@ -91,6 +91,7 @@ ErrorType SscPlanner::RunOnce() {
 
   static TicToc timer_prepare;
   timer_prepare.tic();
+  // 得到定位信息
   if (map_itf_->GetEgoVehicle(&ego_vehicle_) != kSuccess) {
     LOG(ERROR) << "[Ssc]fail to get ego vehicle info.";
     return kWrongStatus;
@@ -103,15 +104,16 @@ ErrorType SscPlanner::RunOnce() {
   has_initial_state_ = false;
 
   is_lateral_independent_ =
-      initial_state_.velocity > cfg_.planner_cfg().low_speed_threshold()
+      initial_state_.velocity > cfg_.planner_cfg().low_speed_threshold()// 2m/s
           ? true
           : false;
+  // 得到全局规划路径
   if (map_itf_->GetLocalReferenceLane(&nav_lane_local_) != kSuccess) {
     LOG(ERROR) << "[Ssc]fail to find ego lane.";
     return kWrongStatus;
   }
   stf_ = common::StateTransformer(nav_lane_local_);
-
+  //  得到frenet坐标
   if (stf_.GetFrenetStateFromState(initial_state_, &initial_frenet_state_) !=
       kSuccess) {
     LOG(ERROR) << "[Ssc]fail to get init state frenet state.";
@@ -133,6 +135,7 @@ ErrorType SscPlanner::RunOnce() {
     return kWrongStatus;
   }
 
+  // surround_forward_trajs_：周围的轨迹
   if (map_itf_->GetForwardTrajectories(&forward_behaviors_, &forward_trajs_,
                                        &surround_forward_trajs_) != kSuccess) {
     LOG(ERROR) << "[Ssc]fail to get forward trajectories.";
@@ -157,6 +160,7 @@ ErrorType SscPlanner::RunOnce() {
   time_origin_ = initial_state_.time_stamp;
   p_ssc_map_->ResetSscMap(initial_frenet_state_);
   // ~ For closed-loop simulation prediction
+  // 根据前进轨迹确定构建ssc地图
   int num_behaviors = forward_behaviors_.size();
   for (int i = 0; i < num_behaviors; ++i) {
     if (!cfg_.planner_cfg().is_fitting_only()) {

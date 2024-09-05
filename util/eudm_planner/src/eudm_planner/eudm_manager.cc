@@ -788,6 +788,7 @@ ErrorType EudmManager::Run(
   LOG(WARNING) << std::fixed << std::setprecision(4)
                << "[Eudm]******************** RUN START: " << stamp
                << "******************";
+  printf("[Eudm]******************** RUN START:\n");
   static TicToc eudm_timer;
   eudm_timer.tic();
 
